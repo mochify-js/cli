@@ -17,12 +17,12 @@ mochify [options] <spec...>
 ## Options
 
 The Mochify CLI can pick up configuration from files or CLI flags.
-File config can be provided through `package.json` or in JavaScript, JSON or YAML files and is resolved using the [default lookup mechanism specified by `cosmiconfig`][cosmiconfig].
+File config can be provided through `package.json` or in JavaScript or JSON files and is resolved using the [default lookup mechanism specified by `lilconfig`][lilconfig].
 For example, you could either put configuration in a top-level `mochify` key in package.json for static values or a `mochify.config.js` for dynamic ones, and have them being picked up automatically.
 In case an option is present in both the config file and as a CLI flag, the flag takes precedence.
 Refer to the documentation of `@mochify/mochify` for available configuration options.
 
-[cosmiconfig]: https://github.com/davidtheclark/cosmiconfig#explorersearch
+[lilconfig]: https://github.com/antonk52/lilconfig#readme
 
 ### `--config`, `-C`
 
