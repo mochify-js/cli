@@ -20,7 +20,7 @@
     "postversion": "git push --follow-tags && npm publish",
     "prettier:check": "prettier --check '**/*.{js,json,md}'",
     "prettier:write": "prettier --write '**/*.{js,json,md}'",
-    "prepare": "husky install"
+    "prepare": "husky install && playwright install"
   },
   "keywords": [
     "mocha",
