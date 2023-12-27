@@ -36,6 +36,12 @@ const opts = yargs(hideBin(process.argv))
     group: 'Options:',
     describe: 'Bundle the resolved spec using the given command'
   })
+  .option('bundle-stdin', {
+    type: 'string',
+    group: 'Options:',
+    describe:
+      'Pass a synthetic file as stdin to the bundler with "require" or "import" statements for each spec file'
+  })
   .option('esm', {
     type: 'boolean',
     group: 'Options:',
@@ -57,23 +63,27 @@ const opts = yargs(hideBin(process.argv))
     'Options:': 'Other:'
   })
   .example(
-    '$0 --driver puppeteer --bundle browserify "./src/**/*.test.js" ',
+    '$0 --driver puppeteer --bundle browserify "./src/**/*.test.js"',
     'Bundle all files matching the given spec using browserify and run them using @mochify/driver-puppeteer.'
   )
   .example(
-    '$0 --esm --reporter dot --driver puppeteer "./src/**/*.test.js" ',
+    '$0 --driver playwright --bundle esbuild --bundle-stdin "require" "./src/**/*.test.js"',
+    'Bundle all files matching the given spec using esbuild and run them using @mochify/driver-playwright.'
+  )
+  .example(
+    '$0 --esm --reporter dot --driver puppeteer "./src/**/*.test.js"',
     'Run all tests matching the given spec as ES modules in puppeteer and use the "dot" reporter for output.'
   )
   .example(
-    '$0 "./src/**/*.test.js" ',
+    '$0 "./src/**/*.test.js"',
     'Run all tests matching the given spec using the default configuration lookup.'
   )
   .example(
-    '$0 --config mochify.webdriver.js "./src/**/*.test.js" ',
+    '$0 --config mochify.webdriver.js "./src/**/*.test.js"',
     'Run all tests matching the given spec using the configuration from mochify.webdriver.js.'
   )
   .example(
-    'browserify "./src/**/*.test.js"  | $0 -',
+    'browserify "./src/**/*.test.js" | $0 -',
     'Read a bundled test suite from stdin.'
   )
   .epilogue(
@@ -88,6 +98,9 @@ if (opts['driver-option']) {
 }
 if (opts['server-option']) {
   opts.server_options = opts['server-option'];
+}
+if (opts['bundle-stdin']) {
+  opts.bundle_stdin = opts['bundle-stdin'];
 }
 
 if (opts._.length) {
