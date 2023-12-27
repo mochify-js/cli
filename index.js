@@ -78,7 +78,7 @@ const opts = yargs(hideBin(process.argv))
   )
   .epilogue(
     `Mochify Resources:
-GitHub: https://github.com/mantoni/mochify.js`
+GitHub: https://github.com/mochify-js`
   )
   .wrap(process.stdout.columns ? Math.min(process.stdout.columns, 80) : 80)
   .parse();
