@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { assert } = require('@sinonjs/referee-sinon');
-const execa = require('execa');
+const { execa } = require('execa');
 
 /**
  * @typedef {import('execa').ExecaError} ExecaError
@@ -12,7 +12,7 @@ const execa = require('execa');
 describe('puppeteer', () => {
   async function run(file, ...extra_args) {
     try {
-      return await execa(
+      const result = await execa(
         '../../index.js',
         [file, '--driver', 'puppeteer', ...extra_args],
         {
@@ -20,8 +20,9 @@ describe('puppeteer', () => {
           stderr: process.stderr
         }
       );
+      return { ...result, failed: false };
     } catch (error) {
-      return /** @type {ExecaError} */ (error);
+      return { ...error, failed: true };
     }
   }
 
@@ -45,9 +46,10 @@ describe('puppeteer', () => {
       );
       // @ts-ignore
       fixture.pipe(cp.stdin);
-      result = await cp;
+      const execaResult = await cp;
+      result = { ...execaResult, failed: false };
     } catch (err) {
-      result = /** @type {ExecaError} */ (err);
+      result = { ...err, failed: true };
     }
 
     assert.isFalse(result.failed);
