@@ -1,5 +1,8 @@
 {
   "extends": "@studio/tsconfig",
+  "compilerOptions": {
+    "types": ["node"]
+  },
   "include": ["**/*.js"],
-  "exclude": ["node_modules", "eslint.config.js"]
+  "exclude": ["node_modules", "eslint.config.js", "coverage"]
 }

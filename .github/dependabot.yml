@@ -1,0 +1,27 @@
+version: 2
+updates:
+  # Dependency updates monthly
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "wednesday"
+      time: "03:00"  # UTC
+    versioning-strategy: "increase"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  # GitHub Actions updates quarterly
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "quarterly"
+      day: "wednesday"
+      time: "04:00"
+    open-pull-requests-limit: 10
+
+    commit-message:
+      prefix: "chore"
+      include: "scope"
