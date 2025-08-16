@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { assert } = require('@sinonjs/referee-sinon');
-const execa = require('execa');
+const { execa } = require('execa');
 
 /**
  * @typedef {import('execa').ExecaError} ExecaError
@@ -12,7 +12,7 @@ const execa = require('execa');
 describe('playwright', () => {
   async function run(file, ...extra_args) {
     try {
-      return await execa(
+      const result = await execa(
         '../../index.js',
         [
           file,
@@ -27,8 +27,9 @@ describe('playwright', () => {
           stderr: process.stderr
         }
       );
+      return { ...result, failed: false };
     } catch (error) {
-      return /** @type {ExecaError} */ (error);
+      return { ...error, failed: true };
     }
   }
 
@@ -55,9 +56,10 @@ describe('playwright', () => {
         path.resolve(__dirname, './fixture/passes.js')
       );
       fixture.pipe(/** @type {Object} */ (cp).stdin);
-      result = await cp;
+      const execaResult = await cp;
+      result = { ...execaResult, failed: false };
     } catch (err) {
-      result = /** @type {ExecaError} */ (err);
+      result = { ...err, failed: true };
     }
 
     assert.isFalse(result.failed);

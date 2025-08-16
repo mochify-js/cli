@@ -4,7 +4,7 @@ const fs = require('fs');
 const http = require('http');
 const path = require('path');
 const { assert } = require('@sinonjs/referee-sinon');
-const execa = require('execa');
+const { execa } = require('execa');
 
 /**
  * @typedef {import('execa').ExecaError} ExecaError
@@ -13,7 +13,7 @@ const execa = require('execa');
 describe('webdriver', () => {
   async function run(file, ...extra_args) {
     try {
-      return await execa(
+      const result = await execa(
         '../../index.js',
         [file, '--driver', 'webdriver', ...extra_args],
         {
@@ -21,8 +21,9 @@ describe('webdriver', () => {
           stderr: process.stderr
         }
       );
+      return { ...result, failed: false };
     } catch (error) {
-      return /** @type {ExecaError} */ (error);
+      return { ...error, failed: true };
     }
   }
 
@@ -53,9 +54,10 @@ describe('webdriver', () => {
       );
       // @ts-ignore
       fixture.pipe(cp.stdin);
-      result = await cp;
+      const execaResult = await cp;
+      result = { ...execaResult, failed: false };
     } catch (err) {
-      result = /** @type {ExecaError} */ (err);
+      result = { ...err, failed: true };
     }
 
     assert.isFalse(result.failed);

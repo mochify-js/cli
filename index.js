@@ -2,10 +2,24 @@
 'use strict';
 
 const yargs = require('yargs');
-const { hideBin } = require('yargs/helpers');
 const { mochify } = require('@mochify/mochify');
 
-const opts = yargs(hideBin(process.argv))
+/**
+ * @typedef {import('@mochify/mochify').MochifyOptions} MochifyOptions
+ * @typedef {import('yargs').ArgumentsCamelCase<{
+ * config?: string;
+ * driver?: string;
+ * 'driver-option'?: string;
+ * reporter?: string;
+ * bundle?: string;
+ * 'bundle-stdin'?: string;
+ * esm?: boolean;
+ * serve?: string;
+ * 'server-option'?: string;
+ * }>} CliArgs
+ */
+
+const opts = yargs(process.argv.slice(2))
   .usage('$0 [config] <spec...>')
   .option('config', {
     alias: 'C',
@@ -20,7 +34,7 @@ const opts = yargs(hideBin(process.argv))
     describe: 'Specify the driver module'
   })
   .option('driver-option', {
-    type: 'object',
+    type: 'string',
     group: 'Options:',
     describe: 'Pass options to the driver'
   })
@@ -55,7 +69,7 @@ const opts = yargs(hideBin(process.argv))
       'Run tests in the context of a local web server, serve the given directory'
   })
   .option('server-option', {
-    type: 'object',
+    type: 'string',
     group: 'Options:',
     describe: 'Pass options to the server (requires --serve or --esm)'
   })
@@ -93,25 +107,56 @@ GitHub: https://github.com/mochify-js`
   .wrap(process.stdout.columns ? Math.min(process.stdout.columns, 80) : 80)
   .parse();
 
-if (opts['driver-option']) {
-  opts.driver_options = opts['driver-option'];
+/** @type {CliArgs & { _: (string | number)[]; $0: string }} */
+const yargsResult =
+  /** @type {CliArgs & { _: (string | number)[]; $0: string }} */ (opts);
+
+/** @type {MochifyOptions} */
+const mochifyOpts = {};
+
+if (yargsResult.config) {
+  mochifyOpts.config = yargsResult.config;
 }
-if (opts['server-option']) {
-  opts.server_options = opts['server-option'];
+if (yargsResult.driver) {
+  mochifyOpts.driver = yargsResult.driver;
 }
-if (opts['bundle-stdin']) {
-  opts.bundle_stdin = opts['bundle-stdin'];
+if (yargsResult.reporter) {
+  mochifyOpts.reporter =
+    /** @type {import('@mochify/mochify').MochifyOptions['reporter']} */ (
+      yargsResult.reporter
+    );
+}
+if (yargsResult.bundle) {
+  mochifyOpts.bundle = yargsResult.bundle;
+}
+if (yargsResult.esm) {
+  mochifyOpts.esm = yargsResult.esm;
+}
+if (yargsResult.serve) {
+  mochifyOpts.serve = yargsResult.serve;
 }
 
-if (opts._.length) {
-  if (opts._[0] === '-') {
-    opts.spec = process.stdin;
+if (yargsResult['driver-option']) {
+  mochifyOpts.driver_options = yargsResult['driver-option'];
+}
+if (yargsResult['server-option']) {
+  mochifyOpts.server_options = yargsResult['server-option'];
+}
+if (yargsResult['bundle-stdin']) {
+  mochifyOpts.bundle_stdin = /** @type {'require' | 'import'} */ (
+    yargsResult['bundle-stdin']
+  );
+}
+
+if (yargsResult._.length) {
+  if (yargsResult._[0] === '-') {
+    mochifyOpts.spec = process.stdin;
   } else {
-    opts.spec = opts._;
+    mochifyOpts.spec = /** @type {string[]} */ (yargsResult._);
   }
 }
-delete opts._;
-mochify(opts)
+
+mochify(mochifyOpts)
   .catch((err) => {
     console.error(err.stack);
     return { exit_code: 1 };

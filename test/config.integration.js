@@ -2,7 +2,7 @@
 
 const path = require('path');
 const { assert } = require('@sinonjs/referee-sinon');
-const execa = require('execa');
+const { execa } = require('execa');
 
 describe('config', () => {
   it('mochify.config.js', async () => {
