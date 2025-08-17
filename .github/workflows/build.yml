@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,8 +18,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['20.x', '20.x']
-
+        node-version: ['20.x', '22.x']
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -30,13 +32,14 @@ jobs:
       - name: Lint
         if: matrix.node-version == '22.x'
         run: npm run lint
-      - name: Types
+      - name: Build
         if: matrix.node-version == '22.x'
-        run: tsc
+        run: npm run build
       - name: Prettier
         if: matrix.node-version == '22.x'
         run: npm run prettier:check
       - name: Test
+        if: matrix.node-version != '22.x' #coverage-check for 22.x already runs test:all
         run: npm test
       # N.B.: The selenium server cannot run as a GitHub Actions "service" as
       # the tests need to mount local data into the container.
@@ -47,8 +50,32 @@ jobs:
             --name selenium_server \
             -v ${PWD}:${PWD} \
             selenium/standalone-firefox:latest
+      - name: Coverage
+        if: matrix.node-version == '22.x'
+        run: npm run coverage:check
       - name: Integration
+        if: matrix.node-version != '22.x' #coverage-check for 22.x already runs test:all
         run: npm run test:integration
       - name: Stop Selenium Server
         if: always()
         run: docker stop selenium_server && docker rm selenium_server
+
+  dependabot-automerge:
+    needs: [build]
+    if: >
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Automerge Dependabot PRs if all checks have passed
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr merge --squash --auto ${{ github.event.pull_request.number }}
