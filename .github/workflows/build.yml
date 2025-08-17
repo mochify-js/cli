@@ -32,6 +32,9 @@ jobs:
       - name: Lint
         if: matrix.node-version == '22.x'
         run: npm run lint
+      - name: Types
+        if: matrix.node-version == '22.x'
+        run: tsc
       - name: Build
         if: matrix.node-version == '22.x'
         run: npm run build
@@ -54,7 +57,7 @@ jobs:
         if: matrix.node-version == '22.x'
         run: npm run coverage:check
       - name: Integration
-        if: matrix.node-version != '22.x' #coverage-check for 22.x already runs test:all
+        if: matrix.node-version != '22.x' #Coverage for 22.x already runs test:all
         run: npm run test:integration
       - name: Stop Selenium Server
         if: always()

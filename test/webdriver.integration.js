@@ -23,7 +23,8 @@ describe('webdriver', () => {
       );
       return { ...result, failed: false };
     } catch (error) {
-      return { ...error, failed: true };
+      const e = /** @type {ExecaError} */ (error);
+      return { ...e, failed: true };
     }
   }
 
@@ -56,8 +57,9 @@ describe('webdriver', () => {
       fixture.pipe(cp.stdin);
       const execaResult = await cp;
       result = { ...execaResult, failed: false };
-    } catch (err) {
-      result = { ...err, failed: true };
+    } catch (error) {
+      const e = /** @type {ExecaError} */ (error);
+      result = { ...e, failed: true };
     }
 
     assert.isFalse(result.failed);
@@ -110,9 +112,13 @@ function pingSelenium() {
 }
 
 function getResultStdoutAsJson(result) {
+  const stdout =
+    typeof result.stdout === 'string'
+      ? result.stdout
+      : String(result.stdout ?? '');
   // At some point between v8.10 and v8.27 WebDriver started to log one line
   // with level INFO, even though the log level is set to "warn".
   //
   // 2023-12-22T14:01:31.855Z INFO @wdio/utils: Connecting to existing driver …
-  return JSON.parse(result.stdout.substring(result.stdout.indexOf('{')));
+  return JSON.parse(stdout.substring(stdout.indexOf('{')));
 }
