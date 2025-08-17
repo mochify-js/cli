@@ -29,7 +29,8 @@ describe('playwright', () => {
       );
       return { ...result, failed: false };
     } catch (error) {
-      return { ...error, failed: true };
+      const e = /** @type {ExecaError} */ (error);
+      return { ...e, failed: true };
     }
   }
 
@@ -37,7 +38,11 @@ describe('playwright', () => {
     const result = await run('passes.js');
 
     assert.isFalse(result.failed);
-    const json = JSON.parse(result.stdout);
+    const stdout =
+      typeof result.stdout === 'string'
+        ? result.stdout
+        : String(result.stdout ?? '');
+    const json = JSON.parse(stdout);
     assert.equals(json.tests.length, 1);
     assert.equals(json.tests[0].fullTitle, 'test passes');
   });
@@ -58,12 +63,17 @@ describe('playwright', () => {
       fixture.pipe(/** @type {Object} */ (cp).stdin);
       const execaResult = await cp;
       result = { ...execaResult, failed: false };
-    } catch (err) {
-      result = { ...err, failed: true };
+    } catch (error) {
+      const e = /** @type {ExecaError} */ (error);
+      result = { ...e, failed: true };
     }
 
     assert.isFalse(result.failed);
-    const json = JSON.parse(result.stdout);
+    const stdout =
+      typeof result.stdout === 'string'
+        ? result.stdout
+        : String(result.stdout ?? '');
+    const json = JSON.parse(stdout);
     assert.equals(json.tests.length, 1);
     assert.equals(json.tests[0].fullTitle, 'test passes');
   });
@@ -72,7 +82,11 @@ describe('playwright', () => {
     const result = await run('fails.js');
 
     assert.isTrue(result.failed);
-    const json = JSON.parse(result.stdout);
+    const stdout =
+      typeof result.stdout === 'string'
+        ? result.stdout
+        : String(result.stdout ?? '');
+    const json = JSON.parse(stdout);
     assert.equals(json.tests.length, 1);
     assert.equals(json.tests[0].fullTitle, 'test fails');
   });
@@ -81,7 +95,11 @@ describe('playwright', () => {
     const result = await run('client-leak.js');
 
     assert.isFalse(result.failed);
-    const json = JSON.parse(result.stdout);
+    const stdout =
+      typeof result.stdout === 'string'
+        ? result.stdout
+        : String(result.stdout ?? '');
+    const json = JSON.parse(stdout);
     assert.equals(json.tests.length, 1);
     assert.equals(
       json.tests[0].fullTitle,
@@ -92,7 +110,11 @@ describe('playwright', () => {
   it('handles esm', async () => {
     const result = await run('esm.test.js', '--esm');
     assert.isFalse(result.failed);
-    const json = JSON.parse(result.stdout);
+    const stdout =
+      typeof result.stdout === 'string'
+        ? result.stdout
+        : String(result.stdout ?? '');
+    const json = JSON.parse(stdout);
     assert.equals(json.tests.length, 1);
     assert.equals(json.tests[0].fullTitle, 'test passes');
   });

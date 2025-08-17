@@ -18,7 +18,7 @@
     "clean": "rimraf --glob '!(node_modules)/**/*.d.ts' '*.d.ts' coverage",
     "prepack": "npm run clean && npm run build",
     "postpack": "npm run clean",
-    "preversion": "npm run lint && npm run prettier:check && tsc && npm coverage:check",
+    "preversion": "npm run lint && npm run prettier:check && tsc && npm run coverage:check",
     "version": "changes --commits --footer",
     "postversion": "git push --follow-tags && npm publish",
     "prettier:check": "prettier --check '**/*.{js,json,md}'",
