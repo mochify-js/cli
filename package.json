@@ -1,6 +1,6 @@
 {
   "name": "@mochify/cli",
-  "version": "0.4.1",
+  "version": "1.0.0",
   "description": "Run mocha tests in headless browsers from the command line",
   "homepage": "https://github.com/mochify-js/cli",
   "bin": {
