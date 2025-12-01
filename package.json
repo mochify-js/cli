@@ -65,7 +65,7 @@
     "lint-staged": "^16.2.6",
     "mocha": "^11.7.5",
     "prettier": "^3.7.3",
-    "rimraf": "^6.1.0",
+    "rimraf": "^6.1.2",
     "typescript": "^5.9.3"
   },
   "files": [
