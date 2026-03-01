@@ -62,7 +62,7 @@
     "eslint": "^9.39.2",
     "execa": "^9.6.1",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.7",
+    "lint-staged": "^16.3.0",
     "mocha": "^11.7.5",
     "prettier": "^3.8.1",
     "rimraf": "^6.1.3",
