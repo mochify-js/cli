@@ -51,7 +51,7 @@
     "@mochify/driver-playwright": "^1.0.2",
     "@mochify/driver-puppeteer": "^1.0.1",
     "@mochify/driver-webdriver": "^1.0.0",
-    "@sinonjs/referee-sinon": "^12.0.0",
+    "@sinonjs/referee-sinon": "^12.0.1",
     "@studio/changes": "^3.0.0",
     "@studio/eslint-config": "^8.0.1",
     "@studio/related-tests": "^0.2.0",
