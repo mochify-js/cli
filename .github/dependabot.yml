@@ -1,10 +1,10 @@
 version: 2
 updates:
-  # Dependency updates monthly
+  # Dependency updates weekly
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
       day: "wednesday"
       time: "03:00"  # UTC
     versioning-strategy: "increase"
@@ -13,11 +13,11 @@ updates:
       prefix: "chore"
       include: "scope"
 
-  # GitHub Actions updates quarterly
+  # GitHub Actions updates monthly
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "quarterly"
+      interval: "monthly"
       day: "wednesday"
       time: "04:00"
     open-pull-requests-limit: 10
