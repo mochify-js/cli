@@ -1,4 +1,3 @@
-/*eslint-env mocha*/
 import ok from './esm.js';
 
 describe('test', () => {
