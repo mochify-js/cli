@@ -1,7 +1,18 @@
 {
-  "extends": "@studio/tsconfig",
   "compilerOptions": {
-    "types": ["node"]
+    "lib": ["es2022"],
+    "target": "es2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "types": ["node", "mocha"]
   },
   "include": ["**/*.js"],
   "exclude": ["node_modules", "eslint.config.js", "coverage"]
