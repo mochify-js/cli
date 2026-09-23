@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.2",
-    "@commitlint/config-conventional": "^21.2.2",
+    "@commitlint/config-conventional": "^21.2.3",
     "@mochify/driver-jsdom": "^2.0.0",
     "@mochify/driver-playwright": "^2.0.0",
     "@mochify/driver-puppeteer": "^2.0.0",
